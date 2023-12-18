@@ -110,7 +110,7 @@ void Camera::Update(const Timer* pTimer)
 	bool calculateCamMatrix{};
 	bool calculateProjectionMatrix{};
 	// movement
-	constexpr float SPEED{ 30 };
+	constexpr float SPEED{ 10 };
 	if (pKeyboardState[SDL_SCANCODE_W])
 	{
 		m_Origin += m_Forward * SPEED * deltaTime;

@@ -4,11 +4,11 @@
 namespace dae {
 
 	Renderer::Renderer(SDL_Window* pWindow) :
-		m_WindowPtr{ pWindow },
-		m_CameraPtr{ new Camera({0,0,-10}, 45.f, static_cast<float>(m_Width)/static_cast<float>(m_Height))}
+		m_WindowPtr{ pWindow }
 	{
 		//Initialize
 		SDL_GetWindowSize(pWindow, &m_Width, &m_Height);
+		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
 
 		//Initialize DirectX pipeline
 		const HRESULT result = InitializeDirectX();
@@ -78,7 +78,7 @@ namespace dae {
 
 	void Renderer::Update(const Timer* pTimer)
 	{
-		//m_CameraPtr->Update(pTimer);
+		m_CameraPtr->Update(pTimer);
 	}
 
 	void Renderer::Render() const
@@ -91,9 +91,7 @@ namespace dae {
 		m_DeviceContextPtr->ClearDepthStencilView(m_DepthStencilViewPtr, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		// set pipeline + invoke draw calls (= render)
-		
 		Matrix worldViewProjectionMatrix{ m_TrianglePtr->GetWorldMatrix() * m_CameraPtr->GetInvViewMatrix() * m_CameraPtr->GetProjectionMatrix() };
-		////m_TrianglePtr->GetEffectPtr()->UpdateWorldViewProjectionMatrix(worldViewProjectionMatrix);
 		m_TrianglePtr->Render(m_DeviceContextPtr, reinterpret_cast<float*>(&worldViewProjectionMatrix));
 
 		// present back buffer (swap)

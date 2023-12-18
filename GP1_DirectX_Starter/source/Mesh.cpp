@@ -85,7 +85,7 @@ void Mesh::Render(ID3D11DeviceContext* deviceContextPtr, const float* dataPtr)
 	//2. Set Input Layout
 	deviceContextPtr->IASetInputLayout(m_InputLayout);
 
-	//m_EffectPtr->GetWorldViewProjMatrix()->SetMatrix(dataPtr);
+	m_EffectPtr->GetWorldViewProjMatrix()->SetMatrix(dataPtr);
 
 	//3. Set VertexBuffer
 	constexpr UINT stride = sizeof(Vertex);
