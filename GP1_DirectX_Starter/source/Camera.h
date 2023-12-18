@@ -20,7 +20,7 @@ private:
 	Vector3 m_Target{};
 	Vector3 m_RotationOrigin{ m_Target };
 	Vector3 m_StarTarget{ m_Target };
-	float m_FovAngle{ 90.f };
+	float m_FovAngle{ 45.f };
 	float m_FovValue{ tanf((m_FovAngle * TO_RADIANS) / 2.f) };
 
 	float m_AspectRatio{};

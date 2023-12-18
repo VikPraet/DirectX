@@ -25,9 +25,9 @@ namespace dae {
 		//Create some data for our mesh
 		const std::vector<Mesh::Vertex> vertices
 		{
-			{{ 0.f, .5f, .5f }, { 1.f ,0.f, 0.f} },
-			{{.5f, -.5f, .5f }, {0.f, 1.f, 0.f} },
-			{{-.5f, -.5f, .5f}, {0.f, 0.f, 1.f } }
+			{{ 0.f, 3, 2 }, { 1.f ,0.f, 0.f} },
+			{{3, -3, 2 }, {0.f, 1.f, 0.f} },
+			{{-3, -3, 2}, {0.f, 0.f, 1.f } }
 		};
 		const std::vector<uint32_t> indices{ 0,1,2 };
 
@@ -37,7 +37,6 @@ namespace dae {
 	Renderer::~Renderer()
 	{
 		delete m_CameraPtr;
-
 		if(m_DeviceContextPtr)
 		{
 			m_DeviceContextPtr->ClearState();
