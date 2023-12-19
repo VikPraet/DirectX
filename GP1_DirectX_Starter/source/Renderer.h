@@ -22,6 +22,7 @@ namespace dae
 		void Render() const;
 
 		void CycleSamplerState();
+		void ToggleRotation();
 
 	private:
 		SDL_Window*				m_WindowPtr{};
@@ -39,6 +40,7 @@ namespace dae
 		Mesh* m_TrianglePtr{};
 
 		std::vector<Mesh*> m_MeshesPtr{};
+		const Vector3 m_VehiclePos{ 0, 0, 0 };
 
 		int m_Width{};
 		int m_Height{};
@@ -46,6 +48,7 @@ namespace dae
 		bool m_IsInitialized{ false };
 
 		int m_SamplerState{};
+		bool m_CanRotate{ false };
 
 		//DIRECTX
 		HRESULT InitializeDirectX();

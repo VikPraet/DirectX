@@ -31,6 +31,10 @@ namespace dae
 
 		Vector2 GetXY() const;
 
+		static float Distance(const Vector3& v1, const Vector3& v2);
+		static float DistanceSqrd(const Vector3& v1, const Vector3& v2);
+		static Vector3 Lerp(const Vector3& a, const Vector3& b, float t);
+
 		//Member Operators
 		Vector3 operator*(float scale) const;
 		Vector3 operator/(float scale) const;

@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "Mesh.h"
+#include "Parser.h"
+
 namespace dae {
 
 	Renderer::Renderer(SDL_Window* pWindow) :
@@ -22,30 +24,19 @@ namespace dae {
 			std::cout << "DirectX initialization failed!\n";
 		}
 
-		//Create some data for our mesh
-		const std::vector<Mesh::Vertex> vertices
-		{
-			{{ 3,  3, 2 }, { 1.f ,0.f, 0.f }, { 1, 0} },
-			{{ 3, -3, 2 }, { 0.f, 1.f, 0.f }, { 1, 1} },
-			{{-3, -3, 2 }, { 0.f, 0.f, 1.f }, { 0, 1} },
-			{{-3,  3,  2 }, { 0.f, 0.f, 1.f}, { 0, 0} }
-		};
-		const std::vector<Mesh::Vertex> vertices2
-		{
-			{{ 2,  2, 1 }, { 1.f ,0.f, 0.f }, { 1, 0} },
-			{{ 2, -2, 1 }, { 0.f, 1.f, 0.f }, { 1, 1} },
-			{{-2, -2, 1 }, { 0.f, 0.f, 1.f }, { 0, 1} },
-			{{-2,  2, 1 }, { 0.f, 0.f, 1.f}, { 0, 0} }
-		};
-		const std::vector<uint32_t> indices{
-			0,1,2,
-			0,2,3
-		};
+		m_CameraPtr = new Camera({ 0,0,-50 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height), m_VehiclePos);
 
-		m_MeshesPtr.push_back(new Mesh(m_DevicePtr, vertices, indices, "Resources/uv_grid_2.png"));
-		m_MeshesPtr.push_back(new Mesh(m_DevicePtr, vertices2, indices, "Resources/vehicle_diffuse.png"));
+		std::vector<Mesh::Vertex> verticesVehicle{ };
+		std::vector<uint32_t> indicesVehicle{ };
 
-		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
+		if(Utils::ParseOBJ("Resources/vehicle.obj", verticesVehicle, indicesVehicle))
+		{
+			Mesh* vehicleMeshPtr = new Mesh(m_DevicePtr, verticesVehicle, indicesVehicle, "Resources/vehicle_diffuse.png");
+			m_MeshesPtr.push_back(vehicleMeshPtr);
+		}
+
+		const Matrix TMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
+		m_MeshesPtr[0]->GetWorldMatrix() *= TMatrix;
 	}
 
 	Renderer::~Renderer()
@@ -103,6 +94,26 @@ namespace dae {
 	void Renderer::Update(const Timer* pTimer) const
 	{
 		m_CameraPtr->Update(pTimer);
+
+		if (m_CanRotate)
+		{
+			// rotate mesh 0 (vehicle)
+
+			constexpr float rotationSpeed = 1.0f; // in radians per second
+			const float rotationAngle = pTimer->GetElapsed() * rotationSpeed;
+
+			// translation to world origin
+			const Matrix translationToOrigin = Matrix::CreateTranslation(-m_VehiclePos.x, -m_VehiclePos.y, -m_VehiclePos.z);
+
+			// Rotation around the y-axis
+			const Matrix rotationMatrix = Matrix::CreateRotation(0, rotationAngle, 0);
+
+			// translation back to objectPos
+			const Matrix translationBack = Matrix::CreateTranslation(m_VehiclePos.x, m_VehiclePos.y, m_VehiclePos.z);
+
+			// Combine the matrices
+			m_MeshesPtr[0]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
+		}
 	}
 
 	void Renderer::Render() const
@@ -235,5 +246,20 @@ namespace dae {
 		{
 			m_MeshesPtr[i]->GetEffectPtr()->SetSamplerState(m_DevicePtr, m_SamplerState);
 		}
+	}
+
+	void Renderer::ToggleRotation()
+	{
+		m_CanRotate = !m_CanRotate;
+
+		const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 0x0c);
+		std::cout << "Rotation ";
+
+		if (m_CanRotate) SetConsoleTextAttribute(hConsole, 0x0a);
+		else SetConsoleTextAttribute(hConsole, 0x04);
+		std::cout << std::boolalpha << m_CanRotate << std::endl;
+
+		SetConsoleTextAttribute(hConsole, 0x07);
 	}
 }

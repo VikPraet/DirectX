@@ -6,13 +6,12 @@ class Camera
 public:
 	Camera() = default;
 
-	Camera(const Vector3& origin, float fovAngle, float aspectRatio, const Vector3 target = {0,0,0});
+	Camera(const Vector3& origin, float fovAngle, float aspectRatio, Vector3 target = {0,0,0});
 
 	Matrix& GetViewMatrix() { return m_ViewMatrix; }
 	Matrix& GetInvViewMatrix() { return m_InvViewMatrix; }
 	Matrix& GetProjectionMatrix() { return m_ProjectionMatrix; }
 
-	void Initialize(float fovAngle = 90.f, Vector3 origin = { 0.f,0.f,0.f }, float aspectRatio = 1.778f, Vector3 target = { 0.f,0.f,0.f });
 	void Update(const Timer* pTimer);
 
 private:
@@ -37,15 +36,12 @@ private:
 	Matrix m_ProjectionMatrix{};
 
 	float m_NearPlane{ 0.1f };
-	float m_FarPlane{ 100.f };
+	float m_FarPlane{ 1000.f };
 
-	//float targetStopDistance{ Vector3::Distance(origin, target) };
-
+	float targetStopDistance{ };
 
 	void CalculateViewMatrix();
-
-	//void CalculateViewMatrixTargetRotation();
-
+	void CalculateViewMatrixTargetRotation();
 	void CalculateProjectionMatrix();
 
 };

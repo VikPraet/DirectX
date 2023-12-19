@@ -89,6 +89,34 @@ namespace dae {
 		return { x, y };
 	}
 
+	float Vector3::Distance(const Vector3& v1, const Vector3& v2)
+	{
+		const float deltaX = v2.x - v1.x;
+		const float deltaY = v2.y - v1.y;
+		const float deltaZ = v2.z - v1.z;
+
+		return std::sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+	}
+
+	float Vector3::DistanceSqrd(const Vector3& v1, const Vector3& v2)
+	{
+		const float deltaX = v2.x - v1.x;
+		const float deltaY = v2.y - v1.y;
+		const float deltaZ = v2.z - v1.z;
+
+		return deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ;
+	}
+
+	Vector3 Vector3::Lerp(const Vector3& a, const Vector3& b, float t)
+	{
+		t = std::clamp(t, 0.0f, 1.0f);
+		return {
+			a.x + t * (b.x - a.x),
+			a.y + t * (b.y - a.y),
+			a.z + t * (b.z - a.z)
+		};
+	}
+
 #pragma region Operator Overloads
 	Vector3 Vector3::operator*(float scale) const
 	{

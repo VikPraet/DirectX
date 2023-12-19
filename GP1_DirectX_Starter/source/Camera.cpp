@@ -1,19 +1,11 @@
 #include "pch.h"
 #include "Camera.h"
 
-Camera::Camera(const Vector3& origin, float fovAngle, float aspectRatio, const Vector3 target):
+Camera::Camera(const Vector3& origin, float fovAngle, float aspectRatio, Vector3 target):
 	m_Origin{ origin },
 	m_Target{ target },
 	m_FovAngle{ fovAngle },
 	m_AspectRatio{ aspectRatio }
-{
-	m_FovValue = tanf((m_FovAngle * TO_RADIANS) / 2.f);
-
-	CalculateViewMatrix();
-	CalculateProjectionMatrix();
-}
-
-void Camera::Initialize(float fovAngle, Vector3 origin, float aspectRatio, Vector3 target)
 {
 	m_FovAngle = fovAngle;
 	m_FovValue = tanf((m_FovAngle * TO_RADIANS) / 2.f);
@@ -22,7 +14,7 @@ void Camera::Initialize(float fovAngle, Vector3 origin, float aspectRatio, Vecto
 	m_Origin = origin;
 	m_Target = target;
 	m_StarTarget = target;
-	/*targetStopDistance = Vector3::Distance(origin, target);*/
+	targetStopDistance = Vector3::Distance(origin, target);
 	CalculateViewMatrix();
 	CalculateProjectionMatrix();
 }
@@ -61,43 +53,25 @@ void Camera::CalculateProjectionMatrix()
 	m_ProjectionMatrix = { x,y,z,t };
 }
 
-//void Camera::CalculateViewMatrixTargetRotation()
-//{
-//	//ONB => invViewMatrix
-//	//Inverse(ONB) => ViewMatrix
-//
-//	right = Vector3::Cross(Vector3::UnitY, forward);
-//	right.Normalize();
-//
-//	up = Vector3::Cross(forward, right);
-//	up.Normalize();
-//
-//	rotationOrigin = target - forward * Vector3::Distance(target, origin);
-//
-//	viewMatrix = {
-//		{ right.x	, right.y	, right.z	, 0},
-//		{ up.x		, up.y		, up.z		, 0},
-//		{ forward.x	, forward.y	, forward.z	, 0},
-//		{ rotationOrigin.x	, rotationOrigin.y	, rotationOrigin.z	, 1}
-//	};
-//
-//	invViewMatrix = Matrix::Inverse(viewMatrix);
-//
-//	//ViewMatrix => Matrix::CreateLookAtLH(...) [not implemented yet]
-//	//DirectX Implementation => https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixlookatlh
-//}
-//
-//void Camera::CalculateProjectionMatrix()
-//{
-//	Vector4 x{ 1 / (aspectRatio * fovValue), 0, 0, 0 };
-//	Vector4 y{ 0, 1 / fovValue, 0, 0 };
-//	Vector4 z{ 0, 0, farPlane / (farPlane - nearPlane), 1 };
-//	Vector4 t{ 0, 0, -(farPlane * nearPlane) / (farPlane - nearPlane), 0 };
-//
-//	projectionMatrix = { x,y,z,t };
-//	//projectionMatrix = Matrix::CreatePerspectiveFovLH(fovValue, aspectRatio, nearPlane, farPlane);
-//	//DirectX Implementation => https://learn.microsoft.com/en-us/windows/win32/direct3d9/d3dxmatrixperspectivefovlh
-//}
+void Camera::CalculateViewMatrixTargetRotation()
+{
+	m_Right = Vector3::Cross(Vector3::UnitY, m_Forward);
+	m_Right.Normalize();
+
+	m_Up = Vector3::Cross(m_Forward, m_Right);
+	m_Up.Normalize();
+
+	m_RotationOrigin = m_Target - m_Forward * Vector3::Distance(m_Target, m_Origin);
+
+	m_ViewMatrix = {
+		{ m_Right.x	, m_Right.y	, m_Right.z	, 0},
+		{ m_Up.x		, m_Up.y		, m_Up.z		, 0},
+		{ m_Forward.x	, m_Forward.y	, m_Forward.z	, 0},
+		{ m_RotationOrigin.x	, m_RotationOrigin.y	, m_RotationOrigin.z	, 1}
+	};
+
+	m_InvViewMatrix = Matrix::Inverse(m_ViewMatrix);
+}
 
 void Camera::Update(const Timer* pTimer)
 {
@@ -110,7 +84,7 @@ void Camera::Update(const Timer* pTimer)
 	bool calculateCamMatrix{};
 	bool calculateProjectionMatrix{};
 	// movement
-	constexpr float SPEED{ 10 };
+	constexpr float SPEED{ 30 };
 	if (pKeyboardState[SDL_SCANCODE_W])
 	{
 		m_Origin += m_Forward * SPEED * deltaTime;
@@ -150,31 +124,30 @@ void Camera::Update(const Timer* pTimer)
 		m_Target = m_StarTarget;
 		isRefocusing = true;
 	}
-	// Smoothly move towards the target using linear interpolation
-	//if (isRefocusing)
-	//{
-	//	constexpr float translationSpeed = 2.0f; // Adjust this speed as needed
-	//	origin = Vector3::Lerp(origin, target, translationSpeed * deltaTime);
 
-	//	// Ensure the camera still looks at the target
-	//	constexpr float rotationSpeed = 5.0f; // Adjust this speed as needed
-	//	forward = Vector3::Lerp(forward, (target - origin).Normalized(), rotationSpeed * deltaTime);
+	//Smoothly move towards the target using linear interpolation
+	if (isRefocusing)
+	{
+		constexpr float translationSpeed = 2.0f; // Adjust this speed as needed
+		m_Origin = Vector3::Lerp(m_Origin, m_Target, translationSpeed * deltaTime);
 
-	//	CalculateViewMatrix();
-	//	CalculateProjectionMatrix();
-	//}
-	//if (isRefocusing && Vector3::Distance(origin, target) < targetStopDistance) // checks if distance to target is smaller than distance to stop from taget
-	//{
-	//	forward = (target - origin).Normalized();
-	//	rotationOrigin = origin;
-	//	target = origin + forward * Vector3::Distance(target, origin);
+		constexpr float rotationSpeed = 5.0f; // Adjust this speed as needed
+		m_Forward = Vector3::Lerp(m_Forward, (m_Target - m_Origin).Normalized(), rotationSpeed * deltaTime);
 
-	//	// Extract pitch and yaw from the interpolated forward vector
-	//	totalPitch = asinf(forward.y); // Calculate pitch angle
-	//	totalYaw = atan2f(forward.x, forward.z); // Calculate yaw angle
+		CalculateViewMatrix();
+		CalculateProjectionMatrix();
+	}
+	if (isRefocusing && Vector3::Distance(m_Origin, m_Target) < targetStopDistance) // checks if distance to target is smaller than distance to stop from taget
+	{
+		m_Forward = (m_Target - m_Origin).Normalized();
+		m_RotationOrigin = m_Origin;
+		m_Target = m_Origin + m_Forward * Vector3::Distance(m_Target, m_Origin);
 
-	//	isRefocusing = false; // Refocusing is complete
-	//}
+		m_TotalPitch = asinf(m_Forward.y); // Calculate pitch angle
+		m_TotalYaw = atan2f(m_Forward.x, m_Forward.z); // Calculate yaw angle
+
+		isRefocusing = false; // Refocusing is complete
+	}
 
 
 	// fov
@@ -249,23 +222,27 @@ void Camera::Update(const Timer* pTimer)
 		calculateCamMatrix = true;
 	}
 
-	//// rotation
-	//if (pKeyboardState[SDL_SCANCODE_LALT] && mouseState & SDL_BUTTON_LMASK)
-	//{
-	//	totalYaw += mouseX * SENSITIVITY;
-	//	totalPitch -= mouseY * SENSITIVITY;
-	//	const Matrix final{ Matrix::CreateRotationX(totalPitch) * Matrix::CreateRotationY(totalYaw) };
+	// rotation
+	if (pKeyboardState[SDL_SCANCODE_LALT] && mouseState & SDL_BUTTON_LMASK)
+	{
+		m_TotalYaw += mouseX * SENSITIVITY;
+		m_TotalPitch -= mouseY * SENSITIVITY;
+		const Matrix final{ Matrix::CreateRotationX(m_TotalPitch) * Matrix::CreateRotationY(m_TotalYaw) };
 
-	//	forward = final.TransformVector(Vector3::UnitZ);
-	//	forward.Normalize();
+		m_Forward = final.TransformVector(Vector3::UnitZ);
+		m_Forward.Normalize();
 
-	//	CalculateViewMatrixTargetRotation();
-	//	origin = rotationOrigin;
-	//}
+		CalculateViewMatrixTargetRotation();
+		m_Origin = m_RotationOrigin;
+	}
+
+	//// clamp pitch
+	constexpr float maxPitchAngle{85.f};
+	m_TotalPitch = std::clamp(m_TotalPitch, -maxPitchAngle * TO_RADIANS, maxPitchAngle * TO_RADIANS);
 
 	if (calculateCamMatrix)
 	{
-		//target = origin + forward * Vector3::Distance(target, origin);
+		m_Target = m_Origin + m_Forward * Vector3::Distance(m_Target, m_Origin);
 		CalculateViewMatrix();
 	}
 

@@ -6,9 +6,11 @@ class Mesh
 public:
 	struct Vertex
 	{
-		dae::Vector3 Position;
-		dae::Vector3 Color;
-		dae::Vector2 UV;
+		dae::Vector3 position;
+		dae::Vector3 color;
+		dae::Vector2 uv;
+		dae::Vector3 normal;
+		dae::Vector3 tangent;
 	};
 	Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& texturePath);
 	~Mesh();

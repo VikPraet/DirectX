@@ -3,28 +3,6 @@ Texture2D gDiffuseMap : DiffuseMap;
 
 SamplerState g_SamplerState : Sampler;
 
-//SamplerState samPoint
-//{
-//    Filter = MIN_MAG_MIP_POINT; // Use point filtering
-//    AddressU = Wrap; //or Mirror, Clamp, Border
-//    AddressV = Wrap; //or Mirror, Clamp, Border
-//};
-
-//SamplerState samLinear
-//{
-//    Filter = MIN_MAG_MIP_LINEAR; // Use linear filtering
-//    AddressU = Wrap; //or Mirror, Clamp, Border
-//    AddressV = Wrap; //or Mirror, Clamp, Border
-//};
-
-//SamplerState samAnisotropic
-//{
-//    Filter = ANISOTROPIC; // Use anisotropic filtering
-//    MaxAnisotropy = 16; // You can adjust this value based on your needs
-//    AddressU = Wrap; // or Mirror, Clamp, Border
-//    AddressV = Wrap; // or Mirror, Clamp, Border
-//};
-
 struct VS_INPUT
 {
     float3 Position : POSITION;

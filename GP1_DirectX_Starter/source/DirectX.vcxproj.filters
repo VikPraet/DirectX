@@ -51,6 +51,9 @@
     <ClInclude Include="Texture.h">
       <Filter>classes</Filter>
     </ClInclude>
+    <ClInclude Include="Parser.h">
+      <Filter>classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
