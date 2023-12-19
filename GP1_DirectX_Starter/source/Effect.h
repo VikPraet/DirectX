@@ -16,6 +16,7 @@ public:
 	void UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const;
 
 	void SetDiffuseMap(const Texture* diffuseTexturePtr) const;
+	void SetSamplerState(ID3D11Device* devicePtr, int state) const;
 
 private:
 	ID3DX11Effect* m_EffectPtr{};
@@ -23,5 +24,6 @@ private:
 
 	ID3DX11EffectMatrixVariable* m_WorldViewProjMatrixPtr{};
 	ID3DX11EffectShaderResourceVariable* m_DiffuseMapVariablePtr{};
+	ID3DX11EffectSamplerVariable* m_SamplerStateVariablePtr{};
 };
 

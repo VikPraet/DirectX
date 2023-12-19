@@ -19,6 +19,12 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 	{
 		std::wcout << L"DiffuseMapVariable not valid!\n";
 	}
+
+	m_SamplerStateVariablePtr = m_EffectPtr->GetVariableByName("g_SamplerState")->AsSampler();
+	if (!m_DiffuseMapVariablePtr->IsValid())
+	{
+		std::wcout << L"SamplerStateVariablePtr not valid!\n";
+	}
 }
 
 Effect::~Effect()
@@ -96,4 +102,54 @@ void Effect::UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) c
 void Effect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
 {
 	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
+}
+
+void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
+{
+	D3D11_SAMPLER_DESC samplerDesc;
+	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
+
+	// set console textColor to ...
+	const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 0x0c);
+
+	switch (state)
+	{
+	case 0:
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		std::wcout << "SamplerState Set: POINT\n";
+		break;
+	case 1:
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+		std::wcout << "SamplerState Set: LINEAR\n";
+		break;
+	case 2:
+		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
+		samplerDesc.MaxAnisotropy = 16;
+		std::wcout << "SamplerState Set: ANISOTROPIC\n";
+		break;
+	default:
+		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+		std::wcout << "Default SamplerState Set: PointFiler\n";
+		break;
+	}
+
+	samplerDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	samplerDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	samplerDesc.MinLOD = 0;
+	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create sampler state
+	ID3D11SamplerState* samplerState{ nullptr };
+	if (const HRESULT hr = devicePtr->CreateSamplerState(&samplerDesc, &samplerState); FAILED(hr))
+	{
+		std::wcout << "CreateSamplerSate failed\n";
+	}
+
+	m_SamplerStateVariablePtr->SetSampler(0, samplerState);
+
+	// set console textColor to white
+	SetConsoleTextAttribute(hConsole, 0x07);
 }

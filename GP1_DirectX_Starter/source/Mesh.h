@@ -10,7 +10,7 @@ public:
 		dae::Vector3 Color;
 		dae::Vector2 UV;
 	};
-	Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
+	Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& texturePath);
 	~Mesh();
 
 	void Render(ID3D11DeviceContext* deviceContextPtr, const float* dataPtr);

@@ -35,7 +35,7 @@ namespace dae {
 			0,2,3
 		};
 
-		m_TrianglePtr = new Mesh( m_DevicePtr, vertices, indices );
+		m_TrianglePtr = new Mesh( m_DevicePtr, vertices, indices, "Resources/uv_grid_2.png" );
 
 		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
 	}
@@ -86,7 +86,7 @@ namespace dae {
 		}
 	}
 
-	void Renderer::Update(const Timer* pTimer)
+	void Renderer::Update(const Timer* pTimer) const
 	{
 		m_CameraPtr->Update(pTimer);
 	}
@@ -206,5 +206,14 @@ namespace dae {
 		m_DeviceContextPtr->RSSetViewports(1, &viewport);
 
 		return S_OK;
+	}
+
+	void Renderer::CycleSamplerState()
+	{
+		constexpr int nrOfStates{ 3 };
+		++m_SamplerState;
+		m_SamplerState %= nrOfStates;
+
+		m_TrianglePtr->GetEffectPtr()->SetSamplerState(m_DevicePtr, m_SamplerState);
 	}
 }

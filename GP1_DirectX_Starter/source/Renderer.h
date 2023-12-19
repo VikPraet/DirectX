@@ -18,8 +18,10 @@ namespace dae
 		Renderer& operator=(const Renderer&) = delete;
 		Renderer& operator=(Renderer&&) noexcept = delete;
 
-		void Update(const Timer* pTimer);
+		void Update(const Timer* pTimer) const;
 		void Render() const;
+
+		void CycleSamplerState();
 
 	private:
 		SDL_Window*				m_WindowPtr{};
@@ -40,6 +42,9 @@ namespace dae
 		int m_Height{};
 
 		bool m_IsInitialized{ false };
+
+		int m_SamplerState{};
+
 		//DIRECTX
 		HRESULT InitializeDirectX();
 		//...
