@@ -28,14 +28,22 @@ namespace dae {
 			{{ 3,  3, 2 }, { 1.f ,0.f, 0.f }, { 1, 0} },
 			{{ 3, -3, 2 }, { 0.f, 1.f, 0.f }, { 1, 1} },
 			{{-3, -3, 2 }, { 0.f, 0.f, 1.f }, { 0, 1} },
-			{{-3, 3,  2 }, { 0.f, 0.f, 1.f}, { 0, 0} }
+			{{-3,  3,  2 }, { 0.f, 0.f, 1.f}, { 0, 0} }
+		};
+		const std::vector<Mesh::Vertex> vertices2
+		{
+			{{ 2,  2, 1 }, { 1.f ,0.f, 0.f }, { 1, 0} },
+			{{ 2, -2, 1 }, { 0.f, 1.f, 0.f }, { 1, 1} },
+			{{-2, -2, 1 }, { 0.f, 0.f, 1.f }, { 0, 1} },
+			{{-2,  2, 1 }, { 0.f, 0.f, 1.f}, { 0, 0} }
 		};
 		const std::vector<uint32_t> indices{
 			0,1,2,
 			0,2,3
 		};
 
-		m_TrianglePtr = new Mesh( m_DevicePtr, vertices, indices, "Resources/uv_grid_2.png" );
+		m_MeshesPtr.push_back(new Mesh(m_DevicePtr, vertices, indices, "Resources/uv_grid_2.png"));
+		m_MeshesPtr.push_back(new Mesh(m_DevicePtr, vertices2, indices, "Resources/vehicle_diffuse.png"));
 
 		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
 	}
@@ -45,8 +53,14 @@ namespace dae {
 		delete m_CameraPtr;
 		m_CameraPtr = nullptr;
 
-		delete m_TrianglePtr;
-		m_TrianglePtr = nullptr;
+		//delete m_TrianglePtr;
+		//m_TrianglePtr = nullptr;
+
+		for(int i{}; m_MeshesPtr.size() > i; ++i)
+		{
+			delete m_MeshesPtr[i];
+			m_MeshesPtr[i] = nullptr;
+		}
 
 		if (m_DevicePtr)
 		{
@@ -101,8 +115,11 @@ namespace dae {
 		m_DeviceContextPtr->ClearDepthStencilView(m_DepthStencilViewPtr, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		// set pipeline + invoke draw calls (= render)
-		Matrix worldViewProjectionMatrix{ m_TrianglePtr->GetWorldMatrix() * m_CameraPtr->GetInvViewMatrix() * m_CameraPtr->GetProjectionMatrix() };
-		m_TrianglePtr->Render(m_DeviceContextPtr, reinterpret_cast<float*>(&worldViewProjectionMatrix));
+		for (int i{}; m_MeshesPtr.size() > i; ++i)
+		{
+			Matrix worldViewProjectionMatrix{ m_MeshesPtr[i]->GetWorldMatrix() * m_CameraPtr->GetInvViewMatrix() * m_CameraPtr->GetProjectionMatrix()};
+			m_MeshesPtr[i]->Render(m_DeviceContextPtr, reinterpret_cast<float*>(&worldViewProjectionMatrix));
+		}
 
 		// present back buffer (swap)
 		m_SwapChainPtr->Present(0, 0);
@@ -214,6 +231,9 @@ namespace dae {
 		++m_SamplerState;
 		m_SamplerState %= nrOfStates;
 
-		m_TrianglePtr->GetEffectPtr()->SetSamplerState(m_DevicePtr, m_SamplerState);
+		for (int i{}; m_MeshesPtr.size() > i; ++i)
+		{
+			m_MeshesPtr[i]->GetEffectPtr()->SetSamplerState(m_DevicePtr, m_SamplerState);
+		}
 	}
 }

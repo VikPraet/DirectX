@@ -38,6 +38,8 @@ namespace dae
 		Camera* m_CameraPtr{};
 		Mesh* m_TrianglePtr{};
 
+		std::vector<Mesh*> m_MeshesPtr{};
+
 		int m_Width{};
 		int m_Height{};
 
