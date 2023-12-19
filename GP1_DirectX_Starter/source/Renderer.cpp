@@ -37,16 +37,21 @@ namespace dae {
 	Renderer::~Renderer()
 	{
 		delete m_CameraPtr;
+		m_CameraPtr = nullptr;
+
+		delete m_TrianglePtr;
+		m_TrianglePtr = nullptr;
+
+		if (m_DevicePtr)
+		{
+			m_DevicePtr->Release();
+		}
+
 		if(m_DeviceContextPtr)
 		{
 			m_DeviceContextPtr->ClearState();
 			m_DeviceContextPtr->Flush();
 			m_DeviceContextPtr->Release();
-		}
-
-		if (m_DevicePtr)
-		{
-			m_DevicePtr->Release();
 		}
 
 		if (m_SwapChainPtr)

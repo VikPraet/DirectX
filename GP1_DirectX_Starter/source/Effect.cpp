@@ -21,14 +21,14 @@ Effect::~Effect()
 	{
 		m_EffectPtr->Release();
 	}
-	if (m_TechniquePtr)
-	{
-		m_TechniquePtr->Release();
-	}
-	if(m_WorldViewProjMatrixPtr)
-	{
-		m_WorldViewProjMatrixPtr->Release();
-	}
+	//if (m_TechniquePtr)
+	//{
+	//	m_TechniquePtr->Release();
+	//}
+	//if(m_WorldViewProjMatrixPtr)
+	//{
+	//	m_WorldViewProjMatrixPtr->Release();
+	//}
 }
 
 ID3DX11Effect* Effect::GetEffect() const
@@ -86,6 +86,7 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 			return nullptr;
 		}
 	}
+
 	return effectPtr;
 }
 
