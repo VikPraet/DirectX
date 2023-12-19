@@ -8,7 +8,7 @@ namespace dae {
 	{
 		//Initialize
 		SDL_GetWindowSize(pWindow, &m_Width, &m_Height);
-		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
+
 
 		//Initialize DirectX pipeline
 		const HRESULT result = InitializeDirectX();
@@ -25,13 +25,19 @@ namespace dae {
 		//Create some data for our mesh
 		const std::vector<Mesh::Vertex> vertices
 		{
-			{{ 0.f, 3, 2 }, { 1.f ,0.f, 0.f} },
-			{{3, -3, 2 }, {0.f, 1.f, 0.f} },
-			{{-3, -3, 2}, {0.f, 0.f, 1.f } }
+			{{ 3,  3, 2 }, { 1.f ,0.f, 0.f }, { 1, 0} },
+			{{ 3, -3, 2 }, { 0.f, 1.f, 0.f }, { 1, 1} },
+			{{-3, -3, 2 }, { 0.f, 0.f, 1.f }, { 0, 1} },
+			{{-3, 3,  2 }, { 0.f, 0.f, 1.f}, { 0, 0} }
 		};
-		const std::vector<uint32_t> indices{ 0,1,2 };
+		const std::vector<uint32_t> indices{
+			0,1,2,
+			0,2,3
+		};
 
 		m_TrianglePtr = new Mesh( m_DevicePtr, vertices, indices );
+
+		m_CameraPtr = new Camera({ 0,0,-10 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height));
 	}
 
 	Renderer::~Renderer()

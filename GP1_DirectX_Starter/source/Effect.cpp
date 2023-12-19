@@ -11,7 +11,13 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 	m_WorldViewProjMatrixPtr = m_EffectPtr->GetVariableByName("gWorldViewProj")->AsMatrix();
 	if (!m_WorldViewProjMatrixPtr->IsValid())
 	{
-		std::wcout << L"m_pMatWorldViewProjVariable not valid!\n";
+		std::wcout << L"MatWorldViewProjVariable not valid!\n";
+	}
+
+	m_DiffuseMapVariablePtr = m_EffectPtr->GetVariableByName("gDiffuseMap")->AsShaderResource();
+	if (!m_DiffuseMapVariablePtr->IsValid())
+	{
+		std::wcout << L"DiffuseMapVariable not valid!\n";
 	}
 }
 
@@ -21,14 +27,6 @@ Effect::~Effect()
 	{
 		m_EffectPtr->Release();
 	}
-	//if (m_TechniquePtr)
-	//{
-	//	m_TechniquePtr->Release();
-	//}
-	//if(m_WorldViewProjMatrixPtr)
-	//{
-	//	m_WorldViewProjMatrixPtr->Release();
-	//}
 }
 
 ID3DX11Effect* Effect::GetEffect() const
@@ -93,4 +91,9 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 void Effect::UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const
 {
 	m_WorldViewProjMatrixPtr->SetMatrix(reinterpret_cast<float*>(&worldViewProjMatrix));
+}
+
+void Effect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
+{
+	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
 }

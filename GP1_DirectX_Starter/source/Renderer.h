@@ -1,6 +1,7 @@
 #pragma once
 #include "Mesh.h"
 #include "Camera.h"
+#include "Texture.h"
 struct SDL_Window;
 struct SDL_Surface;
 
@@ -33,8 +34,8 @@ namespace dae
 		ID3D11RenderTargetView* m_RenderTargetViewPtr{};
 
 		Camera* m_CameraPtr{};
-
 		Mesh* m_TrianglePtr{};
+
 		int m_Width{};
 		int m_Height{};
 

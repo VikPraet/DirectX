@@ -5,9 +5,12 @@ Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const s
 	: m_Vertices{ vertices }
 	, m_Indices{ indices }
 	, m_EffectPtr{ new Effect(devicePtr, L"Resources/PosCol3D.fx") }
+	, m_TexturePtr{ new Texture("Resources/uv_grid_2.png", devicePtr) }
 {
+	m_EffectPtr->SetDiffuseMap(m_TexturePtr);
+
 	//Create Vertex Layout
-	static constexpr uint32_t numElements{ 2 };
+	static constexpr uint32_t numElements{ 3 };
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
 
 	vertexDesc[0].SemanticName = "POSITION";
@@ -19,6 +22,11 @@ Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const s
 	vertexDesc[1].Format = DXGI_FORMAT_R32G32B32_FLOAT;
 	vertexDesc[1].AlignedByteOffset = 12;
 	vertexDesc[1].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+	vertexDesc[2].SemanticName = "TEXCOORD";
+	vertexDesc[2].Format = DXGI_FORMAT_R32G32_FLOAT;
+	vertexDesc[2].AlignedByteOffset = 24;
+	vertexDesc[2].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	//Create Input Layout
 	D3DX11_PASS_DESC passDesc{};
@@ -57,12 +65,19 @@ Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const s
 	initData.pSysMem = m_Indices.data();
 	result = devicePtr->CreateBuffer(&bd, &initData, &m_IndexBufferPtr);
 	if (FAILED(result)) return;
+
+
+
 }
 
 Mesh::~Mesh()
 {
 	delete m_EffectPtr;
 	m_EffectPtr = nullptr;
+
+	delete m_TexturePtr;
+	m_TexturePtr = nullptr;
+
 	if (m_InputLayout)
 	{
 		m_InputLayout->Release();

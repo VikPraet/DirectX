@@ -8,6 +8,7 @@ public:
 	{
 		dae::Vector3 Position;
 		dae::Vector3 Color;
+		dae::Vector2 UV;
 	};
 	Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices);
 	~Mesh();
@@ -25,6 +26,8 @@ private:
 	ID3D11Buffer* m_IndexBufferPtr{};
 	ID3D11InputLayout* m_InputLayout{};
 	int m_NumIndices{};
+
+	Texture* m_TexturePtr{};
 
 	dae::Matrix m_WorldMatrix{
 		{1.0f,	0.0f,	0.0f},

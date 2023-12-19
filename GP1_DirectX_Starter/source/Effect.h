@@ -1,4 +1,6 @@
 #pragma once
+#include "Texture.h"
+
 class Effect
 {
 public:
@@ -12,10 +14,14 @@ public:
 	ID3DX11EffectMatrixVariable* GetWorldViewProjMatrix() const { return m_WorldViewProjMatrixPtr; }
 
 	void UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const;
+
+	void SetDiffuseMap(const Texture* diffuseTexturePtr) const;
+
 private:
 	ID3DX11Effect* m_EffectPtr{};
 	ID3DX11EffectTechnique* m_TechniquePtr{};
 
 	ID3DX11EffectMatrixVariable* m_WorldViewProjMatrixPtr{};
+	ID3DX11EffectShaderResourceVariable* m_DiffuseMapVariablePtr{};
 };
 
