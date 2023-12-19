@@ -14,6 +14,8 @@ public:
 
 	void Update(const Timer* pTimer);
 
+	void UpdateFOV(float increment);
+
 private:
 	Vector3 m_Origin{};
 	Vector3 m_Target{};

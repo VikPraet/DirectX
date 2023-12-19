@@ -15,6 +15,7 @@ Camera::Camera(const Vector3& origin, float fovAngle, float aspectRatio, Vector3
 	m_Target = target;
 	m_StarTarget = target;
 	targetStopDistance = Vector3::Distance(origin, target);
+
 	CalculateViewMatrix();
 	CalculateProjectionMatrix();
 }
@@ -251,4 +252,11 @@ void Camera::Update(const Timer* pTimer)
 		calculateProjectionMatrix = false;
 		CalculateProjectionMatrix();
 	}
+}
+
+void Camera::UpdateFOV(float increment)
+{
+	m_FovAngle += increment;
+	m_FovValue = tanf(m_FovAngle * TO_RADIANS / 2.f);
+	CalculateProjectionMatrix();
 }

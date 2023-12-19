@@ -16,6 +16,10 @@ public:
 	void UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const;
 
 	void SetDiffuseMap(const Texture* diffuseTexturePtr) const;
+	void SetNormalMap(const Texture* normalTexturePtr) const;
+	void SetSpecularMap(const Texture* specularTexturePtr) const;
+	void SetGlossinessMap(const Texture* glossinessTexturePtr) const;
+
 	void SetSamplerState(ID3D11Device* devicePtr, int state) const;
 
 private:
@@ -23,7 +27,12 @@ private:
 	ID3DX11EffectTechnique* m_TechniquePtr{};
 
 	ID3DX11EffectMatrixVariable* m_WorldViewProjMatrixPtr{};
+
 	ID3DX11EffectShaderResourceVariable* m_DiffuseMapVariablePtr{};
+	ID3DX11EffectShaderResourceVariable* m_NormalMapVariablePtr{};
+	ID3DX11EffectShaderResourceVariable* m_SpecularMapVariablePtr{};
+	ID3DX11EffectShaderResourceVariable* m_GlossinessMapVariablePtr{};
+
 	ID3DX11EffectSamplerVariable* m_SamplerStateVariablePtr{};
 };
 

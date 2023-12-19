@@ -24,8 +24,10 @@ namespace dae {
 			std::cout << "DirectX initialization failed!\n";
 		}
 
+		// initialize camera
 		m_CameraPtr = new Camera({ 0,0,-50 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height), m_VehiclePos);
 
+		// initialize vehicle object
 		std::vector<Mesh::Vertex> verticesVehicle{ };
 		std::vector<uint32_t> indicesVehicle{ };
 

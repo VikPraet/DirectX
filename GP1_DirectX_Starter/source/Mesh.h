@@ -29,7 +29,10 @@ private:
 	ID3D11InputLayout* m_InputLayout{};
 	int m_NumIndices{};
 
-	Texture* m_TexturePtr{};
+	Texture* m_DiffuseMapPtr{};
+	Texture* m_NormalMapPtr{};
+	Texture* m_SpecularMapPtr{};
+	Texture* m_GlossinessMapPtr{};
 
 	dae::Matrix m_WorldMatrix{
 		{1.0f,	0.0f,	0.0f},

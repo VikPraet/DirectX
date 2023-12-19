@@ -67,7 +67,19 @@ int main(int argc, char* args[])
 					pRenderer->ToggleRotation();
 				}
 				break;
-			default:;
+			case SDL_MOUSEWHEEL:
+				{
+					constexpr float fovIncrement{ 3 };
+					if (e.wheel.y > 0)
+					{
+						pRenderer->GetCamera().UpdateFOV(-fovIncrement);
+					}
+					if (e.wheel.y < 0)
+					{
+						pRenderer->GetCamera().UpdateFOV(fovIncrement);
+					}
+				}
+			break;
 			}
 		}
 

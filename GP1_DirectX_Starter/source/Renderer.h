@@ -21,6 +21,8 @@ namespace dae
 		void Update(const Timer* pTimer) const;
 		void Render() const;
 
+		Camera& GetCamera() const { return *m_CameraPtr; }
+
 		void CycleSamplerState();
 		void ToggleRotation();
 

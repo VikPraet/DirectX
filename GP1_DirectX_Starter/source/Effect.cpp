@@ -20,8 +20,26 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 		std::wcout << L"DiffuseMapVariable not valid!\n";
 	}
 
-	m_SamplerStateVariablePtr = m_EffectPtr->GetVariableByName("g_SamplerState")->AsSampler();
-	if (!m_DiffuseMapVariablePtr->IsValid())
+	m_NormalMapVariablePtr = m_EffectPtr->GetVariableByName("gNormalMap")->AsShaderResource();
+	if (!m_NormalMapVariablePtr->IsValid())
+	{
+		std::wcout << L"DiffuseMapVariable not valid!\n";
+	}
+
+	m_SpecularMapVariablePtr = m_EffectPtr->GetVariableByName("gSpecularMap")->AsShaderResource();
+	if (!m_SpecularMapVariablePtr->IsValid())
+	{
+		std::wcout << L"DiffuseMapVariable not valid!\n";
+	}
+
+	m_GlossinessMapVariablePtr = m_EffectPtr->GetVariableByName("gGlossinessMap")->AsShaderResource();
+	if (!m_GlossinessMapVariablePtr->IsValid())
+	{
+		std::wcout << L"DiffuseMapVariable not valid!\n";
+	}
+
+	m_SamplerStateVariablePtr = m_EffectPtr->GetVariableByName("gSamplerState")->AsSampler();
+	if (!m_SamplerStateVariablePtr->IsValid())
 	{
 		std::wcout << L"SamplerStateVariablePtr not valid!\n";
 	}
@@ -102,6 +120,21 @@ void Effect::UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) c
 void Effect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
 {
 	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
+}
+
+void Effect::SetNormalMap(const Texture* normalTexturePtr) const
+{
+	if (m_NormalMapVariablePtr) m_NormalMapVariablePtr->SetResource(normalTexturePtr->GetResourceView());
+}
+
+void Effect::SetSpecularMap(const Texture* specularTexturePtr) const
+{
+	if (m_SpecularMapVariablePtr) m_SpecularMapVariablePtr->SetResource(specularTexturePtr->GetResourceView());
+}
+
+void Effect::SetGlossinessMap(const Texture* glossinessTexturePtr) const
+{
+	if (m_GlossinessMapVariablePtr) m_GlossinessMapVariablePtr->SetResource(glossinessTexturePtr->GetResourceView());
 }
 
 void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
