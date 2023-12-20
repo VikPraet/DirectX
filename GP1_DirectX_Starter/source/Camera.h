@@ -11,6 +11,7 @@ public:
 	Matrix& GetViewMatrix() { return m_ViewMatrix; }
 	Matrix& GetInvViewMatrix() { return m_InvViewMatrix; }
 	Matrix& GetProjectionMatrix() { return m_ProjectionMatrix; }
+	Vector3& GetOrigin() { return m_Origin; }
 
 	void Update(const Timer* pTimer);
 

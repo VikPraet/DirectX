@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
 #include "Mesh.h"
-#include "Parser.h"
+#include "Utils.h"
 
 namespace dae {
 
@@ -45,9 +45,6 @@ namespace dae {
 	{
 		delete m_CameraPtr;
 		m_CameraPtr = nullptr;
-
-		//delete m_TrianglePtr;
-		//m_TrianglePtr = nullptr;
 
 		for(int i{}; m_MeshesPtr.size() > i; ++i)
 		{
@@ -96,6 +93,11 @@ namespace dae {
 	void Renderer::Update(const Timer* pTimer) const
 	{
 		m_CameraPtr->Update(pTimer);
+
+		for (int i{}; m_MeshesPtr.size() > i; ++i)
+		{
+			m_MeshesPtr[i]->GetEffectPtr()->GetCameraPos()->SetFloatVector(reinterpret_cast<float*>(&m_CameraPtr->GetOrigin()));
+		}
 
 		if (m_CanRotate)
 		{

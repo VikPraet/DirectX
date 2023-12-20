@@ -12,8 +12,8 @@ public:
 	static ID3DX11Effect* LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile);
 
 	ID3DX11EffectMatrixVariable* GetWorldViewProjMatrix() const { return m_WorldViewProjMatrixPtr; }
-
-	void UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const;
+	ID3DX11EffectMatrixVariable* GetWorldMatrix() const { return m_WorldMatrixPtr; }
+	ID3DX11EffectVectorVariable* GetCameraPos() const { return m_CameraPosPtr; }
 
 	void SetDiffuseMap(const Texture* diffuseTexturePtr) const;
 	void SetNormalMap(const Texture* normalTexturePtr) const;
@@ -27,6 +27,9 @@ private:
 	ID3DX11EffectTechnique* m_TechniquePtr{};
 
 	ID3DX11EffectMatrixVariable* m_WorldViewProjMatrixPtr{};
+	ID3DX11EffectMatrixVariable* m_WorldMatrixPtr{};
+
+	ID3DX11EffectVectorVariable* m_CameraPosPtr{};
 
 	ID3DX11EffectShaderResourceVariable* m_DiffuseMapVariablePtr{};
 	ID3DX11EffectShaderResourceVariable* m_NormalMapVariablePtr{};

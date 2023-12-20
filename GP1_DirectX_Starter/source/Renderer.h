@@ -49,7 +49,7 @@ namespace dae
 
 		bool m_IsInitialized{ false };
 
-		int m_SamplerState{};
+		int m_SamplerState{ 2 };
 		bool m_CanRotate{ false };
 
 		//DIRECTX

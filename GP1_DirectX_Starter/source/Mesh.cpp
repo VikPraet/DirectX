@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& texturePath)
+Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& diffuseMapPath)
 	: m_Vertices{ vertices }
 	, m_Indices{ indices }
 	, m_EffectPtr{ new Effect(devicePtr, L"Resources/PosCol3D.fx") }
-	, m_DiffuseMapPtr{ new Texture(texturePath, devicePtr) }
+	, m_DiffuseMapPtr{ new Texture(diffuseMapPath, devicePtr) }
 	, m_NormalMapPtr{ new Texture("Resources/vehicle_normal.png", devicePtr) }
 	, m_SpecularMapPtr{ new Texture("Resources/vehicle_specular.png", devicePtr) }
 	, m_GlossinessMapPtr{ new Texture("Resources/vehicle_gloss.png", devicePtr) }
@@ -36,12 +36,12 @@ Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const s
 
 	vertexDesc[3].SemanticName = "NORMAL";
 	vertexDesc[3].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	vertexDesc[3].AlignedByteOffset = 36;
+	vertexDesc[3].AlignedByteOffset = 32;
 	vertexDesc[3].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	vertexDesc[4].SemanticName = "TANGENT";
 	vertexDesc[4].Format = DXGI_FORMAT_R32G32B32_FLOAT;
-	vertexDesc[4].AlignedByteOffset = 48;
+	vertexDesc[4].AlignedByteOffset = 44;
 	vertexDesc[4].InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
 	//Create Input Layout
@@ -126,6 +126,7 @@ void Mesh::Render(ID3D11DeviceContext* deviceContextPtr, const float* dataPtr)
 	deviceContextPtr->IASetInputLayout(m_InputLayout);
 
 	m_EffectPtr->GetWorldViewProjMatrix()->SetMatrix(dataPtr);
+	m_EffectPtr->GetWorldMatrix()->SetMatrix(reinterpret_cast<const float*>(&m_WorldMatrix));
 
 	//3. Set VertexBuffer
 	constexpr UINT stride = sizeof(Vertex);

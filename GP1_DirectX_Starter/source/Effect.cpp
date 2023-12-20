@@ -11,7 +11,19 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 	m_WorldViewProjMatrixPtr = m_EffectPtr->GetVariableByName("gWorldViewProj")->AsMatrix();
 	if (!m_WorldViewProjMatrixPtr->IsValid())
 	{
-		std::wcout << L"MatWorldViewProjVariable not valid!\n";
+		std::wcout << L"WorldViewProjMatrixVariable not valid!\n";
+	}
+
+	m_WorldMatrixPtr = m_EffectPtr->GetVariableByName("gWorldMatrix")->AsMatrix();
+	if (!m_WorldMatrixPtr->IsValid())
+	{
+		std::wcout << L"WorldMatrixVariable not valid!\n";
+	}
+
+	m_CameraPosPtr = m_EffectPtr->GetVariableByName("gCameraPosition")->AsVector();
+	if (!m_CameraPosPtr->IsValid())
+	{
+		std::wcout << L"CameraPos not valid!\n";
 	}
 
 	m_DiffuseMapVariablePtr = m_EffectPtr->GetVariableByName("gDiffuseMap")->AsShaderResource();
@@ -112,11 +124,6 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 	return effectPtr;
 }
 
-void Effect::UpdateWorldViewProjectionMatrix(dae::Matrix& worldViewProjMatrix) const
-{
-	m_WorldViewProjMatrixPtr->SetMatrix(reinterpret_cast<float*>(&worldViewProjMatrix));
-}
-
 void Effect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
 {
 	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
@@ -150,20 +157,20 @@ void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 	{
 	case 0:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		std::wcout << "SamplerState Set: POINT\n";
+		std::wcout << L"SamplerState Set: POINT\n";
 		break;
 	case 1:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		std::wcout << "SamplerState Set: LINEAR\n";
+		std::wcout << L"SamplerState Set: LINEAR\n";
 		break;
 	case 2:
 		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 		samplerDesc.MaxAnisotropy = 16;
-		std::wcout << "SamplerState Set: ANISOTROPIC\n";
+		std::wcout << L"SamplerState Set: ANISOTROPIC\n";
 		break;
 	default:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		std::wcout << "Default SamplerState Set: PointFiler\n";
+		std::wcout << L"Default SamplerState Set: PointFiler\n";
 		break;
 	}
 
@@ -178,10 +185,13 @@ void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 	ID3D11SamplerState* samplerState{ nullptr };
 	if (const HRESULT hr = devicePtr->CreateSamplerState(&samplerDesc, &samplerState); FAILED(hr))
 	{
-		std::wcout << "CreateSamplerSate failed\n";
+		std::wcout << L"CreateSamplerSate failed\n";
+		return;
 	}
 
 	m_SamplerStateVariablePtr->SetSampler(0, samplerState);
+
+	if(samplerState) samplerState->Release();
 
 	// set console textColor to white
 	SetConsoleTextAttribute(hConsole, 0x07);
