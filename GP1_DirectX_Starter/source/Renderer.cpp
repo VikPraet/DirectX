@@ -33,7 +33,7 @@ namespace dae {
 
 		if(Utils::ParseOBJ("Resources/vehicle.obj", verticesVehicle, indicesVehicle))
 		{
-			Mesh* vehicleMeshPtr = new Mesh(m_DevicePtr, verticesVehicle, indicesVehicle, "Resources/vehicle_diffuse.png");
+			Mesh* vehicleMeshPtr = new Mesh(m_DevicePtr, verticesVehicle, indicesVehicle);
 			m_MeshesPtr.push_back(vehicleMeshPtr);
 		}
 

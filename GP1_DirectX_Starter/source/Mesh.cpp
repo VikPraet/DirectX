@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, const std::string& diffuseMapPath)
+Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
 	: m_Vertices{ vertices }
 	, m_Indices{ indices }
 	, m_EffectPtr{ new Effect(devicePtr, L"Resources/PosCol3D.fx") }
-	, m_DiffuseMapPtr{ new Texture(diffuseMapPath, devicePtr) }
+	, m_DiffuseMapPtr{ new Texture("Resources/vehicle_diffuse.png", devicePtr) }
 	, m_NormalMapPtr{ new Texture("Resources/vehicle_normal.png", devicePtr) }
 	, m_SpecularMapPtr{ new Texture("Resources/vehicle_specular.png", devicePtr) }
 	, m_GlossinessMapPtr{ new Texture("Resources/vehicle_gloss.png", devicePtr) }
