@@ -268,6 +268,29 @@ namespace dae {
 		{
 			m_MeshesPtr[i]->GetEffectPtr()->SetSamplerState(m_DevicePtr, m_SamplerState);
 		}
+
+		// set console textColor to red
+		const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 0x0c);
+
+		switch (m_SamplerState)
+		{
+		case 0:
+			std::wcout << L"SamplerState Set: POINT\n";
+			break;
+		case 1:
+			std::wcout << L"SamplerState Set: LINEAR\n";
+			break;
+		case 2:
+			std::wcout << L"SamplerState Set: ANISOTROPIC\n";
+			break;
+		default:
+			std::wcout << L"Default SamplerState Set: PointFiler\n";
+			break;
+		}
+
+		// set console textColor to white
+		SetConsoleTextAttribute(hConsole, 0x07);
 	}
 
 	void Renderer::ToggleRotation()

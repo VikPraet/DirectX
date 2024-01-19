@@ -48,27 +48,28 @@ VehicleEffect::~VehicleEffect()
 void VehicleEffect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
 {
 	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
+	delete diffuseTexturePtr;
 }
 
 void VehicleEffect::SetNormalMap(const Texture* normalTexturePtr) const
 {
 	if (m_NormalMapVariablePtr) m_NormalMapVariablePtr->SetResource(normalTexturePtr->GetResourceView());
+	delete normalTexturePtr;
 }
 
 void VehicleEffect::SetSpecularMap(const Texture* specularTexturePtr) const
 {
 	if (m_SpecularMapVariablePtr) m_SpecularMapVariablePtr->SetResource(specularTexturePtr->GetResourceView());
+	delete specularTexturePtr;
 }
 
 void VehicleEffect::SetGlossinessMap(const Texture* glossinessTexturePtr) const
 {
 	if (m_GlossinessMapVariablePtr) m_GlossinessMapVariablePtr->SetResource(glossinessTexturePtr->GetResourceView());
+	delete glossinessTexturePtr;
 }
 
 void VehicleEffect::SetUseNormalMap(bool useNormalMap) const
 {
-	if (m_UseNormalMapVariablePtr)
-	{
-		m_UseNormalMapVariablePtr->AsScalar()->SetBool(useNormalMap);
-	}
+	if (m_UseNormalMapVariablePtr) m_UseNormalMapVariablePtr->AsScalar()->SetBool(useNormalMap);
 }

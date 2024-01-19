@@ -95,7 +95,7 @@ void BaseEffect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
 
-	// set console textColor to ...
+	// set console textColor to red
 	const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 0x0c);
 
@@ -103,20 +103,16 @@ void BaseEffect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 	{
 	case 0:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		std::wcout << L"SamplerState Set: POINT\n";
 		break;
 	case 1:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-		std::wcout << L"SamplerState Set: LINEAR\n";
 		break;
 	case 2:
 		samplerDesc.Filter = D3D11_FILTER_ANISOTROPIC;
 		samplerDesc.MaxAnisotropy = 16;
-		std::wcout << L"SamplerState Set: ANISOTROPIC\n";
 		break;
 	default:
 		samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
-		std::wcout << L"Default SamplerState Set: PointFiler\n";
 		break;
 	}
 
