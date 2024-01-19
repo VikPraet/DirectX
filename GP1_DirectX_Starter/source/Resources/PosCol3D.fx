@@ -1,11 +1,14 @@
 float4x4 gWorldViewProj : WorldViewProjection;
 
+bool gUseNormalMap : UseNormalMap = true;
+
 Texture2D gDiffuseMap : DiffuseMap;
 Texture2D gNormalMap : NormalMap;
 Texture2D gSpecularMap : SpecularMap;
 Texture2D gGlossinessMap : GlossinessMap;
 
 float3 gLightDirection : LightDirection = float3(0.577f, -0.577f, 0.577f);
+float3 gAmbientIntensity : Ambient = float3(0.03f, 0.03f, 0.03f);
 float4x4 gWorldMatrix : WORLD;
 float3 gCameraPosition : CAMERA;
 
@@ -28,7 +31,6 @@ struct VS_OUTPUT
 {
     float4 Position : SV_POSITION;
     float4 WorldPosition : TEXCOORD0;
-    //float3 Color : COLOR;
     float2 UV : TEXCOORD1;
     float3 Normal : NORMAL;
     float3 Tangent : TANGENT;
@@ -103,9 +105,9 @@ float3 transformNormal(VS_OUTPUT input)
 
 float4 PS(VS_OUTPUT input) : SV_TARGET
 {    
-    input.Normal = transformNormal(input);
-        
-    float4 finalColor = Labmert(input) * ObservedArea(input) + Phong(input);
+    if(gUseNormalMap) input.Normal = transformNormal(input);
+    
+    float4 finalColor = Labmert(input) * ObservedArea(input) + Phong(input) + float4(gAmbientIntensity, 1.0f);
     
     return saturate(finalColor);
 }

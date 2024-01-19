@@ -20,6 +20,8 @@ public:
 	void SetSpecularMap(const Texture* specularTexturePtr) const;
 	void SetGlossinessMap(const Texture* glossinessTexturePtr) const;
 
+	void SetUseNormalMap(bool useNormalMap) const;
+
 	void SetSamplerState(ID3D11Device* devicePtr, int state) const;
 
 private:
@@ -37,5 +39,7 @@ private:
 	ID3DX11EffectShaderResourceVariable* m_GlossinessMapVariablePtr{};
 
 	ID3DX11EffectSamplerVariable* m_SamplerStateVariablePtr{};
+
+	ID3DX11EffectVariable* m_UseNormalMapVariablePtr{};
 };
 

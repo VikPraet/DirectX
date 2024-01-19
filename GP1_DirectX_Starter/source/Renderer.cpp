@@ -125,7 +125,7 @@ namespace dae {
 		if (!m_IsInitialized) return;
 
 		// clear RTV & DSV
-		constexpr float color[4] = {0.f, 0.f, 0.3f, 1.f};
+		constexpr float color[4] = {0.39f, 0.59f, 0.93f, 1.f};
 		m_DeviceContextPtr->ClearRenderTargetView(m_RenderTargetViewPtr, color);
 		m_DeviceContextPtr->ClearDepthStencilView(m_DepthStencilViewPtr, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
@@ -265,5 +265,22 @@ namespace dae {
 		std::cout << std::boolalpha << m_CanRotate << std::endl;
 
 		SetConsoleTextAttribute(hConsole, 0x07);
+	}
+
+	void Renderer::ToggleNormalMap()
+	{
+		m_UseNormalMap = !m_UseNormalMap;
+
+		const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 0x0c);
+		std::cout << "Normal Map ";
+
+		if (m_UseNormalMap) SetConsoleTextAttribute(hConsole, 0x0a);
+		else SetConsoleTextAttribute(hConsole, 0x04);
+		std::cout << std::boolalpha << m_UseNormalMap << std::endl;
+
+		SetConsoleTextAttribute(hConsole, 0x07);
+
+		m_MeshesPtr[0]->GetEffectPtr()->SetUseNormalMap(m_UseNormalMap);
 	}
 }

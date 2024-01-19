@@ -85,35 +85,42 @@ void Camera::Update(const Timer* pTimer)
 	bool calculateCamMatrix{};
 	bool calculateProjectionMatrix{};
 	// movement
-	constexpr float SPEED{ 30 };
+	float speed{ 25 };
+	constexpr float SPEED_BOOST_MULTIPLIER{ 3 };
+
+	if (pKeyboardState[SDL_SCANCODE_LSHIFT])
+	{
+		speed *= SPEED_BOOST_MULTIPLIER;
+	}
+
 	if (pKeyboardState[SDL_SCANCODE_W])
 	{
-		m_Origin += m_Forward * SPEED * deltaTime;
+		m_Origin += m_Forward * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 	if (pKeyboardState[SDL_SCANCODE_S])
 	{
-		m_Origin -= m_Forward * SPEED * deltaTime;
+		m_Origin -= m_Forward * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 	if (pKeyboardState[SDL_SCANCODE_A])
 	{
-		m_Origin -= m_Right * SPEED * deltaTime;
+		m_Origin -= m_Right * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 	if (pKeyboardState[SDL_SCANCODE_D])
 	{
-		m_Origin += m_Right * SPEED * deltaTime;
+		m_Origin += m_Right * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 	if (pKeyboardState[SDL_SCANCODE_E])
 	{
-		m_Origin.y += m_Up.y * SPEED * deltaTime;
+		m_Origin.y += m_Up.y * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 	if (pKeyboardState[SDL_SCANCODE_Q])
 	{
-		m_Origin.y -= m_Up.y * SPEED * deltaTime;
+		m_Origin.y -= m_Up.y * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
 

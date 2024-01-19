@@ -25,6 +25,7 @@ namespace dae
 
 		void CycleSamplerState();
 		void ToggleRotation();
+		void ToggleNormalMap();
 
 	private:
 		SDL_Window*				m_WindowPtr{};
@@ -51,6 +52,7 @@ namespace dae
 
 		int m_SamplerState{ 2 };
 		bool m_CanRotate{ false };
+		bool m_UseNormalMap{ true };
 
 		//DIRECTX
 		HRESULT InitializeDirectX();

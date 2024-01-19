@@ -55,6 +55,12 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 	{
 		std::wcout << L"SamplerStateVariablePtr not valid!\n";
 	}
+
+	m_UseNormalMapVariablePtr = m_EffectPtr->GetVariableByName("gUseNormalMap")->AsScalar();
+	if (!m_UseNormalMapVariablePtr->IsValid())
+	{
+		std::wcout << L"UseNormalMapVariable not valid!\n";
+	}
 }
 
 Effect::~Effect()
@@ -142,6 +148,14 @@ void Effect::SetSpecularMap(const Texture* specularTexturePtr) const
 void Effect::SetGlossinessMap(const Texture* glossinessTexturePtr) const
 {
 	if (m_GlossinessMapVariablePtr) m_GlossinessMapVariablePtr->SetResource(glossinessTexturePtr->GetResourceView());
+}
+
+void Effect::SetUseNormalMap(bool useNormalMap) const
+{
+	if (m_UseNormalMapVariablePtr)
+	{
+		m_UseNormalMapVariablePtr->AsScalar()->SetBool(useNormalMap);
+	}
 }
 
 void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
