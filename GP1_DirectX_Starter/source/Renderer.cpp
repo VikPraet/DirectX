@@ -28,17 +28,34 @@ namespace dae {
 		m_CameraPtr = new Camera({ 0,0,-50 }, 45.f, static_cast<float>(m_Width) / static_cast<float>(m_Height), m_VehiclePos);
 
 		// initialize vehicle object
+		VehicleEffect* vehicleMat = new VehicleEffect(m_DevicePtr);
+
 		std::vector<Mesh::Vertex> verticesVehicle{ };
 		std::vector<uint32_t> indicesVehicle{ };
 
 		if(Utils::ParseOBJ("Resources/vehicle.obj", verticesVehicle, indicesVehicle))
 		{
-			Mesh* vehicleMeshPtr = new Mesh(m_DevicePtr, verticesVehicle, indicesVehicle);
+			Mesh* vehicleMeshPtr = new Mesh(m_DevicePtr, verticesVehicle, indicesVehicle, vehicleMat);
 			m_MeshesPtr.push_back(vehicleMeshPtr);
 		}
 
 		const Matrix TMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
 		m_MeshesPtr[0]->GetWorldMatrix() *= TMatrix;
+
+
+		// initialize vehicle object
+		VehicleEffect* fireFXMat = new VehicleEffect(m_DevicePtr);
+
+		std::vector<Mesh::Vertex> verticesFireFX{ };
+		std::vector<uint32_t> indicesFireFX{ };
+
+		if (Utils::ParseOBJ("Resources/fireFX.obj", verticesFireFX, indicesFireFX))
+		{
+			Mesh* FireFxMeshPtr = new Mesh(m_DevicePtr, verticesFireFX, indicesFireFX, fireFXMat);
+			m_MeshesPtr.push_back(FireFxMeshPtr);
+		}
+		const Matrix TFXMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
+		m_MeshesPtr[0]->GetWorldMatrix() *= TFXMatrix;
 	}
 
 	Renderer::~Renderer()
@@ -117,6 +134,7 @@ namespace dae {
 
 			// Combine the matrices
 			m_MeshesPtr[0]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
+			m_MeshesPtr[1]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
 		}
 	}
 
@@ -281,6 +299,10 @@ namespace dae {
 
 		SetConsoleTextAttribute(hConsole, 0x07);
 
-		m_MeshesPtr[0]->GetEffectPtr()->SetUseNormalMap(m_UseNormalMap);
+		BaseEffect* baseEffectPtr = m_MeshesPtr[0]->GetEffectPtr();
+		// Check if the effect is of type VehicleEffect
+		const VehicleEffect* vehicleEffectPtr = reinterpret_cast<VehicleEffect*>(baseEffectPtr);
+
+		vehicleEffectPtr->SetUseNormalMap(m_UseNormalMap);
 	}
 }

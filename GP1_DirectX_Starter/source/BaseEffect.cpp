@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "Effect.h"
+#include "BaseEffect.h"
 
-Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
+BaseEffect::BaseEffect(ID3D11Device* devicePtr, const std::wstring& path)
 {
 	m_EffectPtr = LoadEffect(devicePtr, path);
 
@@ -26,44 +26,14 @@ Effect::Effect(ID3D11Device* devicePtr, const std::wstring& path)
 		std::wcout << L"CameraPos not valid!\n";
 	}
 
-	m_DiffuseMapVariablePtr = m_EffectPtr->GetVariableByName("gDiffuseMap")->AsShaderResource();
-	if (!m_DiffuseMapVariablePtr->IsValid())
-	{
-		std::wcout << L"DiffuseMapVariable not valid!\n";
-	}
-
-	m_NormalMapVariablePtr = m_EffectPtr->GetVariableByName("gNormalMap")->AsShaderResource();
-	if (!m_NormalMapVariablePtr->IsValid())
-	{
-		std::wcout << L"DiffuseMapVariable not valid!\n";
-	}
-
-	m_SpecularMapVariablePtr = m_EffectPtr->GetVariableByName("gSpecularMap")->AsShaderResource();
-	if (!m_SpecularMapVariablePtr->IsValid())
-	{
-		std::wcout << L"DiffuseMapVariable not valid!\n";
-	}
-
-	m_GlossinessMapVariablePtr = m_EffectPtr->GetVariableByName("gGlossinessMap")->AsShaderResource();
-	if (!m_GlossinessMapVariablePtr->IsValid())
-	{
-		std::wcout << L"DiffuseMapVariable not valid!\n";
-	}
-
 	m_SamplerStateVariablePtr = m_EffectPtr->GetVariableByName("gSamplerState")->AsSampler();
 	if (!m_SamplerStateVariablePtr->IsValid())
 	{
 		std::wcout << L"SamplerStateVariablePtr not valid!\n";
 	}
-
-	m_UseNormalMapVariablePtr = m_EffectPtr->GetVariableByName("gUseNormalMap")->AsScalar();
-	if (!m_UseNormalMapVariablePtr->IsValid())
-	{
-		std::wcout << L"UseNormalMapVariable not valid!\n";
-	}
 }
 
-Effect::~Effect()
+BaseEffect::~BaseEffect()
 {
 	if (m_EffectPtr)
 	{
@@ -71,17 +41,7 @@ Effect::~Effect()
 	}
 }
 
-ID3DX11Effect* Effect::GetEffect() const
-{
-	return m_EffectPtr;
-}
-
-ID3DX11EffectTechnique* Effect::GetTechnique() const
-{
-	return m_TechniquePtr;
-}
-
-ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
+ID3DX11Effect* BaseEffect::LoadEffect(ID3D11Device* pDevice, const std::wstring& assetFile)
 {
 	HRESULT result;
 	ID3D10Blob* errorBlobPtr{ nullptr };
@@ -130,35 +90,7 @@ ID3DX11Effect* Effect::LoadEffect(ID3D11Device* pDevice, const std::wstring& ass
 	return effectPtr;
 }
 
-void Effect::SetDiffuseMap(const Texture* diffuseTexturePtr) const
-{
-	if (m_DiffuseMapVariablePtr) m_DiffuseMapVariablePtr->SetResource(diffuseTexturePtr->GetResourceView());
-}
-
-void Effect::SetNormalMap(const Texture* normalTexturePtr) const
-{
-	if (m_NormalMapVariablePtr) m_NormalMapVariablePtr->SetResource(normalTexturePtr->GetResourceView());
-}
-
-void Effect::SetSpecularMap(const Texture* specularTexturePtr) const
-{
-	if (m_SpecularMapVariablePtr) m_SpecularMapVariablePtr->SetResource(specularTexturePtr->GetResourceView());
-}
-
-void Effect::SetGlossinessMap(const Texture* glossinessTexturePtr) const
-{
-	if (m_GlossinessMapVariablePtr) m_GlossinessMapVariablePtr->SetResource(glossinessTexturePtr->GetResourceView());
-}
-
-void Effect::SetUseNormalMap(bool useNormalMap) const
-{
-	if (m_UseNormalMapVariablePtr)
-	{
-		m_UseNormalMapVariablePtr->AsScalar()->SetBool(useNormalMap);
-	}
-}
-
-void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
+void BaseEffect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 {
 	D3D11_SAMPLER_DESC samplerDesc;
 	ZeroMemory(&samplerDesc, sizeof(samplerDesc));
@@ -205,7 +137,7 @@ void Effect::SetSamplerState(ID3D11Device* devicePtr, int state) const
 
 	m_SamplerStateVariablePtr->SetSampler(0, samplerState);
 
-	if(samplerState) samplerState->Release();
+	if (samplerState) samplerState->Release();
 
 	// set console textColor to white
 	SetConsoleTextAttribute(hConsole, 0x07);

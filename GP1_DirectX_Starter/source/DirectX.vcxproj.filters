@@ -39,7 +39,7 @@
     <ClInclude Include="ColorRGB.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Effect.h">
+    <ClInclude Include="VehicleEffect.h">
       <Filter>classes</Filter>
     </ClInclude>
     <ClInclude Include="Mesh.h">
@@ -52,6 +52,12 @@
       <Filter>classes</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="PartialCoverageEffect.h">
+      <Filter>classes</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseEffect.h">
+      <Filter>classes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -72,7 +78,7 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp" />
-    <ClCompile Include="Effect.cpp">
+    <ClCompile Include="VehicleEffect.cpp">
       <Filter>classes</Filter>
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
@@ -82,6 +88,12 @@
       <Filter>classes</Filter>
     </ClCompile>
     <ClCompile Include="Texture.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="PartialCoverageEffect.cpp">
+      <Filter>classes</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseEffect.cpp">
       <Filter>classes</Filter>
     </ClCompile>
   </ItemGroup>

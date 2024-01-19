@@ -1,20 +1,11 @@
 #include "pch.h"
 #include "Mesh.h"
 
-Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices)
+Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const std::vector<uint32_t>& indices, BaseEffect* effect)
 	: m_Vertices{ vertices }
 	, m_Indices{ indices }
-	, m_EffectPtr{ new Effect(devicePtr, L"Resources/PosCol3D.fx") }
-	, m_DiffuseMapPtr{ new Texture("Resources/vehicle_diffuse.png", devicePtr) }
-	, m_NormalMapPtr{ new Texture("Resources/vehicle_normal.png", devicePtr) }
-	, m_SpecularMapPtr{ new Texture("Resources/vehicle_specular.png", devicePtr) }
-	, m_GlossinessMapPtr{ new Texture("Resources/vehicle_gloss.png", devicePtr) }
+	, m_EffectPtr{ effect }
 {
-	m_EffectPtr->SetDiffuseMap(m_DiffuseMapPtr);
-	m_EffectPtr->SetNormalMap(m_NormalMapPtr);
-	m_EffectPtr->SetSpecularMap(m_SpecularMapPtr);
-	m_EffectPtr->SetGlossinessMap(m_GlossinessMapPtr);
-
 	//Create Vertex Layout
 	static constexpr uint32_t numElements{ 5 };
 	D3D11_INPUT_ELEMENT_DESC vertexDesc[numElements]{};
@@ -81,27 +72,12 @@ Mesh::Mesh(ID3D11Device* devicePtr, const std::vector<Vertex>& vertices, const s
 	initData.pSysMem = m_Indices.data();
 	result = devicePtr->CreateBuffer(&bd, &initData, &m_IndexBufferPtr);
 	if (FAILED(result)) return;
-
-
-
 }
 
 Mesh::~Mesh()
 {
 	delete m_EffectPtr;
 	m_EffectPtr = nullptr;
-
-	delete m_DiffuseMapPtr;
-	m_DiffuseMapPtr = nullptr;
-
-	delete m_NormalMapPtr;
-	m_NormalMapPtr = nullptr;
-
-	delete m_SpecularMapPtr;
-	m_SpecularMapPtr = nullptr;
-
-	delete m_GlossinessMapPtr;
-	m_GlossinessMapPtr = nullptr;
 
 	if (m_InputLayout)
 	{
