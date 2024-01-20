@@ -42,7 +42,6 @@ VehicleEffect::VehicleEffect(ID3D11Device* devicePtr):
 
 VehicleEffect::~VehicleEffect()
 {
-
 }
 
 void VehicleEffect::SetDiffuseMap(const Texture* diffuseTexturePtr) const

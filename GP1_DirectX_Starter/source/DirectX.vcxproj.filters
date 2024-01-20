@@ -52,7 +52,7 @@
       <Filter>classes</Filter>
     </ClInclude>
     <ClInclude Include="Utils.h" />
-    <ClInclude Include="PartialCoverageEffect.h">
+    <ClInclude Include="FireFXEffect.h">
       <Filter>classes</Filter>
     </ClInclude>
     <ClInclude Include="BaseEffect.h">
@@ -90,7 +90,7 @@
     <ClCompile Include="Texture.cpp">
       <Filter>classes</Filter>
     </ClCompile>
-    <ClCompile Include="PartialCoverageEffect.cpp">
+    <ClCompile Include="FireFXEffect.cpp">
       <Filter>classes</Filter>
     </ClCompile>
     <ClCompile Include="BaseEffect.cpp">

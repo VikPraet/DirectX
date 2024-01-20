@@ -12,11 +12,37 @@ float3 gAmbientIntensity : Ambient = float3(0.03f, 0.03f, 0.03f);
 float4x4 gWorldMatrix : WORLD;
 float3 gCameraPosition : CAMERA;
 
-float gPI : SV_GroupID = float(3.14159265359);
+float gPI : PI = float(3.14159265359);
 float gLightIntensity : LightIntensity = float(7.0f);
 float gShininess : Shininess = float(25.0f);
 
 SamplerState gSamplerState : Sampler;
+
+RasterizerState gRasterizerState
+{
+    CullMode = back;
+    FrontCounterClockwise = false;
+};
+
+BlendState gBlendState
+{
+    BlendEnable[0] = FALSE;
+    SrcBlend = ONE;
+    DestBlend = ZERO;
+    BlendOp = ADD;
+    SrcBlendAlpha = ONE;
+    DestBlendAlpha = ZERO;
+    BlendOpAlpha = ADD;
+    RenderTargetWriteMask[0] = 0x0F;
+};
+
+DepthStencilState gDepthStencilState
+{
+    DepthEnable = true;
+    DepthWriteMask = ALL;
+    DepthFunc = LESS;
+    StencilEnable = false;
+};
 
 struct VS_INPUT
 {
@@ -116,6 +142,9 @@ technique11 DefaultTechnique
 {
     pass PO
     {
+        SetRasterizerState(gRasterizerState);
+        SetDepthStencilState(gDepthStencilState, 0);
+        SetBlendState(gBlendState, float4(0.0f, 0.0f, 0.0f, 0.0f), 0xFFFFFFFF);
         SetVertexShader(CompileShader(vs_5_0, VS()));
         SetGeometryShader(NULL);
         SetPixelShader(CompileShader(ps_5_0, PS()));

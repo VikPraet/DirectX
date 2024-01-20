@@ -73,7 +73,7 @@ int main(int argc, char* args[])
 				}
 				if (e.key.keysym.scancode == SDL_SCANCODE_F7)
 				{
-					// toggle fireFX mesh
+					pRenderer->ToggleFireFX();
 				}
 				break;
 			case SDL_MOUSEWHEEL:

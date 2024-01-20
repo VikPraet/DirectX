@@ -1,7 +1,6 @@
 #pragma once
 #include "Mesh.h"
 #include "Camera.h"
-#include "Texture.h"
 struct SDL_Window;
 struct SDL_Surface;
 
@@ -26,6 +25,7 @@ namespace dae
 		void CycleSamplerState();
 		void ToggleRotation();
 		void ToggleNormalMap();
+		void ToggleFireFX();
 
 	private:
 		SDL_Window*				m_WindowPtr{};
@@ -53,6 +53,7 @@ namespace dae
 		int m_SamplerState{ 2 };
 		bool m_CanRotate{ false };
 		bool m_UseNormalMap{ true };
+		bool m_renderFireFX{ true };
 
 		//DIRECTX
 		HRESULT InitializeDirectX();

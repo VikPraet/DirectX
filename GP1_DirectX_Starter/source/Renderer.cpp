@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Renderer.h"
+
+#include "FireFXEffect.h"
 #include "Mesh.h"
 #include "Utils.h"
 
@@ -44,7 +46,7 @@ namespace dae {
 
 
 		// initialize vehicle object
-		VehicleEffect* fireFXMat = new VehicleEffect(m_DevicePtr);
+		FireFXEffect* fireFXMat = new FireFXEffect(m_DevicePtr);
 
 		std::vector<Mesh::Vertex> verticesFireFX{ };
 		std::vector<uint32_t> indicesFireFX{ };
@@ -118,10 +120,11 @@ namespace dae {
 
 		if (m_CanRotate)
 		{
-			// rotate mesh 0 (vehicle)
+			// rotate meshes
+			constexpr float rotationSpeedDegrees{ 45.0f }; // Set the rotation speed in degrees per second
+			constexpr float rotationSpeedRadians{ rotationSpeedDegrees * (M_PI / 180.0f) };
 
-			constexpr float rotationSpeed = 1.0f; // in radians per second
-			const float rotationAngle = pTimer->GetElapsed() * rotationSpeed;
+			const float rotationAngle = pTimer->GetElapsed() * rotationSpeedRadians;
 
 			// translation to world origin
 			const Matrix translationToOrigin = Matrix::CreateTranslation(-m_VehiclePos.x, -m_VehiclePos.y, -m_VehiclePos.z);
@@ -132,9 +135,11 @@ namespace dae {
 			// translation back to objectPos
 			const Matrix translationBack = Matrix::CreateTranslation(m_VehiclePos.x, m_VehiclePos.y, m_VehiclePos.z);
 
-			// Combine the matrices
-			m_MeshesPtr[0]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
-			m_MeshesPtr[1]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
+			// Combine and apply the matrices
+			for (int i{}; i < m_MeshesPtr.size(); ++i)
+			{
+				m_MeshesPtr[i]->GetWorldMatrix() *= translationToOrigin * rotationMatrix * translationBack;
+			}
 		}
 	}
 
@@ -148,10 +153,14 @@ namespace dae {
 		m_DeviceContextPtr->ClearDepthStencilView(m_DepthStencilViewPtr, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
 
 		// set pipeline + invoke draw calls (= render)
+		constexpr int fireFxIndex{ 1 };
 		for (int i{}; m_MeshesPtr.size() > i; ++i)
 		{
-			Matrix worldViewProjectionMatrix{ m_MeshesPtr[i]->GetWorldMatrix() * m_CameraPtr->GetInvViewMatrix() * m_CameraPtr->GetProjectionMatrix()};
-			m_MeshesPtr[i]->Render(m_DeviceContextPtr, reinterpret_cast<float*>(&worldViewProjectionMatrix));
+			if(i != fireFxIndex || i == fireFxIndex && m_renderFireFX)
+			{
+				Matrix worldViewProjectionMatrix{ m_MeshesPtr[i]->GetWorldMatrix() * m_CameraPtr->GetInvViewMatrix() * m_CameraPtr->GetProjectionMatrix() };
+				m_MeshesPtr[i]->Render(m_DeviceContextPtr, reinterpret_cast<float*>(&worldViewProjectionMatrix));
+			}
 		}
 
 		// present back buffer (swap)
@@ -327,5 +336,20 @@ namespace dae {
 		const VehicleEffect* vehicleEffectPtr = reinterpret_cast<VehicleEffect*>(baseEffectPtr);
 
 		vehicleEffectPtr->SetUseNormalMap(m_UseNormalMap);
+	}
+
+	void Renderer::ToggleFireFX()
+	{
+		m_renderFireFX = !m_renderFireFX;
+
+		const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+		SetConsoleTextAttribute(hConsole, 0x0c);
+		std::cout << "Fire Effect ";
+
+		if (m_renderFireFX) SetConsoleTextAttribute(hConsole, 0x0a);
+		else SetConsoleTextAttribute(hConsole, 0x04);
+		std::cout << std::boolalpha << m_renderFireFX << std::endl;
+
+		SetConsoleTextAttribute(hConsole, 0x07);
 	}
 }

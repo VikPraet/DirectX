@@ -201,7 +201,7 @@ void Camera::Update(const Timer* pTimer)
 	else if (mouseState & SDL_BUTTON_LMASK && mouseState & SDL_BUTTON_RMASK)
 	{
 		const float movement = mouseY * MOVEMENT_SENSITIVITY;
-		m_Origin -= m_Up * movement;
+		m_Origin.y -= m_Up.y * movement;
 	}
 	else if (mouseState & SDL_BUTTON_RMASK)
 	{
