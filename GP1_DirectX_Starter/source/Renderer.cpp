@@ -41,8 +41,8 @@ namespace dae {
 			m_MeshesPtr.push_back(vehicleMeshPtr);
 		}
 
-		const Matrix TMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
-		m_MeshesPtr[0]->GetWorldMatrix() *= TMatrix;
+		const Matrix TVMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
+		m_MeshesPtr[0]->GetWorldMatrix() *= TVMatrix;
 
 
 		// initialize vehicle object
@@ -57,7 +57,7 @@ namespace dae {
 			m_MeshesPtr.push_back(FireFxMeshPtr);
 		}
 		const Matrix TFXMatrix{ Vector3::UnitX, Vector3::UnitY, Vector3::UnitZ, m_VehiclePos };
-		m_MeshesPtr[0]->GetWorldMatrix() *= TFXMatrix;
+		m_MeshesPtr[1]->GetWorldMatrix() *= TFXMatrix;
 	}
 
 	Renderer::~Renderer()

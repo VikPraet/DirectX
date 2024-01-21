@@ -93,22 +93,22 @@ void Camera::Update(const Timer* pTimer)
 		speed *= SPEED_BOOST_MULTIPLIER;
 	}
 
-	if (pKeyboardState[SDL_SCANCODE_W])
+	if (pKeyboardState[SDL_SCANCODE_W] || pKeyboardState[SDL_SCANCODE_UP])
 	{
 		m_Origin += m_Forward * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
-	if (pKeyboardState[SDL_SCANCODE_S])
+	if (pKeyboardState[SDL_SCANCODE_S] || pKeyboardState[SDL_SCANCODE_DOWN])
 	{
 		m_Origin -= m_Forward * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
-	if (pKeyboardState[SDL_SCANCODE_A])
+	if (pKeyboardState[SDL_SCANCODE_A] || pKeyboardState[SDL_SCANCODE_LEFT])
 	{
 		m_Origin -= m_Right * speed * deltaTime;
 		calculateCamMatrix = true;
 	}
-	if (pKeyboardState[SDL_SCANCODE_D])
+	if (pKeyboardState[SDL_SCANCODE_D] || pKeyboardState[SDL_SCANCODE_RIGHT])
 	{
 		m_Origin += m_Right * speed * deltaTime;
 		calculateCamMatrix = true;
@@ -159,22 +159,8 @@ void Camera::Update(const Timer* pTimer)
 
 
 	// fov
-	constexpr float FOV_INCREMENT{ 20 };
 	constexpr int MAX_FOV{ 160 };
 	constexpr int MIN_FOV{ 10 };
-
-	if (pKeyboardState[SDL_SCANCODE_DOWN] && m_FovAngle < MAX_FOV)
-	{
-		m_FovAngle += FOV_INCREMENT * deltaTime;
-		m_FovValue = tanf(m_FovAngle * TO_RADIANS / 2.f);
-		calculateProjectionMatrix = true;
-	}
-	if (pKeyboardState[SDL_SCANCODE_UP] && m_FovAngle > MIN_FOV)
-	{
-		m_FovAngle -= FOV_INCREMENT * deltaTime;
-		m_FovValue = tanf(m_FovAngle * TO_RADIANS / 2.f);
-		calculateProjectionMatrix = true;
-	}
 
 	if (m_FovAngle > MAX_FOV)
 	{

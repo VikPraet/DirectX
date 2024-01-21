@@ -15,6 +15,61 @@ void ShutDown(SDL_Window* pWindow)
 	SDL_Quit();
 }
 
+void PrintControls()
+{
+	const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 0x0e);
+
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0xe0);
+	std::cout << "RENDERING";
+	SetConsoleTextAttribute(hConsole, 0x07);
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0x0e);
+	std::cout << "'F4' \t cycle sampling state" << std::endl;
+	std::cout << "'F5' \t toggle rotation" << std::endl;
+	std::cout << "'F6' \t toggle normal map" << std::endl;
+	std::cout << "'F7' \t toggle fire fx" << std::endl;
+
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0xf0);
+	std::cout << "KEYBOARD";
+	SetConsoleTextAttribute(hConsole, 0x07);
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0x0f);
+	std::cout << "'W / UP'        move camera forward" << std::endl;
+	std::cout << "'S / DOWN'      move camera backward" << std::endl;
+	std::cout << "'A / LEFT'      move camera left" << std::endl;
+	std::cout << "'D / RIGHT'     move camera fight" << std::endl;
+	std::cout << "'LSHIFT'        camera speed boost" << std::endl;
+	std::cout << "'Q'             move camera down" << std::endl;
+	std::cout << "'E'             move camera up" << std::endl;
+	std::cout << "'F'             recenter camera" << std::endl;
+
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0x90);
+	std::cout << "MOUSE";
+	SetConsoleTextAttribute(hConsole, 0x07);
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0x09);
+	std::cout << "'RMB'           look around" << std::endl;
+	std::cout << "'LMB'           move camera forward / backwards" << std::endl;
+	std::cout << "'LMB + RMB'     move camera up / down" << std::endl;
+	std::cout << "'LALT' + 'LMB'  orbit around center point" << std::endl;
+	std::cout << "'LALT' + 'RMB'  move camera forwards / backwards" << std::endl;
+	std::cout << "'SCROLL'        zoom in / out" << std::endl;
+
+	std::cout << std::endl;
+
+	SetConsoleTextAttribute(hConsole, 0x07);
+}
+
 int main(int argc, char* args[])
 {
 	//Unreferenced parameters
@@ -35,6 +90,15 @@ int main(int argc, char* args[])
 
 	if (!pWindow)
 		return 1;
+
+	// clear console
+	system("CLS");
+
+	// show info text
+	const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute(hConsole, 0xc0);
+	std::cout << "press 'i' for key-bindings" << std::endl;
+	SetConsoleTextAttribute(hConsole, 0x07);
 
 	//Initialize "framework"
 	const auto pTimer = new Timer();
@@ -59,6 +123,10 @@ int main(int argc, char* args[])
 			case SDL_KEYUP:
 				//Test for a key
 				//if (e.key.keysym.scancode == SDL_SCANCODE_X)
+				if (e.key.keysym.scancode == SDL_SCANCODE_I)
+				{
+					PrintControls();
+				}
 				if (e.key.keysym.scancode == SDL_SCANCODE_F4)
 				{
 					pRenderer->CycleSamplerState();
