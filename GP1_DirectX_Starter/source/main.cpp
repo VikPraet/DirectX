@@ -91,9 +91,6 @@ int main(int argc, char* args[])
 	if (!pWindow)
 		return 1;
 
-	// clear console
-	system("CLS");
-
 	// show info text
 	const HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, 0xc0);
